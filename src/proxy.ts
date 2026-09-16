@@ -21,14 +21,15 @@ export default withAuth(
     }
 
     if (isAdminPage && token?.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/', req.url)); // Bukan admin? Balikin ke home
+      return NextResponse.redirect(new URL('/', req.url));
     }
 
     return null;
   },
   {
+    secret: "f6c8d3b7e452a3b04c102a9b47cf83e9b1d35a7408f654e2d8329b31d4e0e5c8",
     callbacks: {
-      authorized: () => true // We handle auth logic inside the middleware function above
+      authorized: () => true
     }
   }
 );

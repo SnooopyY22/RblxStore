@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 
 const handler = NextAuth({
+  secret: "f6c8d3b7e452a3b04c102a9b47cf83e9b1d35a7408f654e2d8329b31d4e0e5c8",
   providers: [
     CredentialsProvider({
       name: "Credentials",
