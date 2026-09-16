@@ -78,7 +78,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const products = await prisma.product.findMany({
       include: {

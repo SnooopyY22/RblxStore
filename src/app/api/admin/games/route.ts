@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 
 // GET - Ambil semua game
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const games = await prisma.game.findMany({ orderBy: { name: 'asc' } });
     return NextResponse.json(games);

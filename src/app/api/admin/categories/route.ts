@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 
 // GET - Ambil semua kategori
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const categories = await prisma.category.findMany({ orderBy: { name: 'asc' } });
     return NextResponse.json(categories);
