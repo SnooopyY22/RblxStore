@@ -61,7 +61,8 @@ const handler = NextAuth({
     }
   },
   pages: {
-    signIn: '/login', // Kita akan buat halaman /login
+    signIn: '/login',
+    error: '/auth/error',
   }
 });
 
