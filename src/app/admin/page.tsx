@@ -2,7 +2,7 @@ import ProductForm from '@/components/admin/ProductForm';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
-export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
   const products = await prisma.product.findMany({

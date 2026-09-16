@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { generateWhatsAppLink } from '@/lib/whatsapp';
 import { prisma } from '@/lib/prisma';
 
-export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params;
