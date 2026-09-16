@@ -5,9 +5,12 @@ import bcrypt from "bcryptjs";
 
 export const dynamic = 'force-dynamic';
 
+// Fix for Vercel Serverless: Next.js doesn't pass next.config.ts envs to node_modules dynamically.
+process.env.NEXTAUTH_URL = "https://roblxstor.vercel.app";
+process.env.NEXTAUTH_SECRET = "f6c8d3b7e452a3b04c102a9b47cf83e9b1d35a7408f654e2d8329b31d4e0e5c8";
 
 const handler = NextAuth({
-  secret: "f6c8d3b7e452a3b04c102a9b47cf83e9b1d35a7408f654e2d8329b31d4e0e5c8",
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Credentials",
