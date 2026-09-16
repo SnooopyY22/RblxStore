@@ -1,38 +1,29 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const token = req.nextauth.token;
-    const isAuth = !!token;
-    const isAuthPage = req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/register');
-    const isAdminPage = req.nextUrl.pathname.startsWith('/admin');
-    const isUserPage = req.nextUrl.pathname.startsWith('/user');
+export function proxy(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  
+  // Cek apakah user punya session cookie
+  const sessionToken = req.cookies.get("next-auth.session-token")?.value 
+    || req.cookies.get("__Secure-next-auth.session-token")?.value;
+  const isAuth = !!sessionToken;
 
-    if (isAuthPage) {
-      if (isAuth) {
-        return NextResponse.redirect(new URL('/', req.url));
-      }
-      return null;
-    }
+  const isAdminPage = pathname.startsWith('/admin');
+  const isUserPage = pathname.startsWith('/user');
+  const isLoginPage = pathname === '/login' || pathname === '/register';
 
-    if (!isAuth && (isAdminPage || isUserPage)) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-
-    if (isAdminPage && token?.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/', req.url));
-    }
-
-    return null;
-  },
-  {
-    secret: "f6c8d3b7e452a3b04c102a9b47cf83e9b1d35a7408f654e2d8329b31d4e0e5c8",
-    callbacks: {
-      authorized: () => true
-    }
+  // Kalau sudah login tapi mau buka login/register, redirect ke home
+  if (isLoginPage && isAuth) {
+    return NextResponse.redirect(new URL('/', req.url));
   }
-);
+
+  // Kalau belum login tapi mau akses admin/user, redirect ke login
+  if (!isAuth && (isAdminPage || isUserPage)) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: ['/admin/:path*', '/user/:path*', '/login', '/register']
