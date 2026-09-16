@@ -27,15 +27,15 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Pendaftaran gagal.');
+        setError(data.message || data.error || 'Pendaftaran gagal.');
         setLoading(false);
         return;
       }
 
       // Berhasil, redirect ke login
       router.push('/login');
-    } catch (err) {
-      setError('Terjadi kesalahan.');
+    } catch (err: any) {
+      setError(err?.message || 'Terjadi kesalahan.');
       setLoading(false);
     }
   };

@@ -32,8 +32,12 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ message: "User registered", user }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return NextResponse.json({ error: "Internal Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Internal Error", 
+      message: error?.message || String(error),
+      stack: error?.stack
+    }, { status: 500 });
   }
 }
