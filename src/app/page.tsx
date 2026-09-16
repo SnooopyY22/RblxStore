@@ -1,16 +1,26 @@
+'use client';
+
 import ProductCatalog from '@/components/products/ProductCatalog';
-import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-export const dynamic = 'force-dynamic';
+export default function Home() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [games, setGames] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function Home() {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: 'desc' }
-  });
-  
-  const categories = await prisma.category.findMany();
-  const games = await prisma.game.findMany();
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/admin/products').then(r => r.json()),
+      fetch('/api/admin/categories').then(r => r.json()),
+      fetch('/api/admin/games').then(r => r.json()),
+    ]).then(([p, c, g]) => {
+      setProducts(Array.isArray(p) ? p : []);
+      setCategories(Array.isArray(c) ? c : []);
+      setGames(Array.isArray(g) ? g : []);
+    }).catch(console.error).finally(() => setLoading(false));
+  }, []);
 
   const mappedProducts = products.map((p) => ({
     id: p.id,
@@ -53,11 +63,17 @@ export default async function Home() {
       </div>
 
       <div id="katalog" className="pt-4 pb-20">
-        <ProductCatalog 
-          products={mappedProducts} 
-          categories={categories} 
-          games={games} 
-        />
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-amber-400 text-lg animate-pulse">Memuat produk...</div>
+          </div>
+        ) : (
+          <ProductCatalog 
+            products={mappedProducts} 
+            categories={categories} 
+            games={games} 
+          />
+        )}
       </div>
     </main>
   );
