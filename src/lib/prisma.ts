@@ -16,7 +16,7 @@ export const prisma =
     : new PrismaClient({
         datasources: {
           db: {
-            url: "postgresql://postgres.mjlekzcrwerjdqbhozkd:Akooww1233%40@aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres?connection_limit=1"
+            url: "postgresql://postgres.mjlekzcrwerjdqbhozkd:Akooww1233%40@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
           }
         }
       }));
